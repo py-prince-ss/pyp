@@ -1,69 +1,45 @@
 'use client';
 
-import CLargeCard from '@/_component/CLargeCard';
-import styled from 'styled-components';
+import CLargeCard from '@/components/CLargeCard';
+import { bgState } from '@/state/bgState';
+import { useRecoilState } from 'recoil';
 import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-const Wrap = styled.div<{ bgColor: string }>`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    border-radius: 1.6667vw;
-    height: 80vh;
-    padding: 3.75vw;
-    background-color: ${(props) => props.bgColor};
-`;
-
-const Title = styled.div<{ bgColor: string }>`
-    font-size: 1.875vw;
-    font-weight: 800;
-    margin-bottom: 24px;
-    display: flex;
-    justify-content: space-between;
-
-    & span {
-        color: ${(props) =>
-            props.bgColor === '#f3f2f9' ? '#6B66DA' : '#2B966F'};
-    }
-`;
-
-const Plus = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    & > svg {
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-    }
-`;
-
-const List = styled(Swiper)`
-    width: 100%;
-    flex: 1;
-`;
-
 interface IProps {
-    bgColor: string;
     title: string;
 }
 
-export default function ProductList({ bgColor, title }: IProps) {
+export default function ProductList({ title }: IProps) {
+    const [bgColor, setBgColor] = useRecoilState(bgState);
+
     return (
-        <Wrap bgColor={bgColor}>
-            <Title bgColor={bgColor}>
+        <div
+            className={`w-full max-w-set mx-auto flex flex-col rounded-[1.6667vw] h-[80vh] p-[3.75vw] ${
+                title === 'Liked' ? 'bg-[#f3f2f9]' : 'bg-[#ebf4f0]'
+            } ${
+                bgColor === '#fff' ? 'opacity-100' : 'opacity-0'
+            } transition-all duration-300`}
+        >
+            <div className="text-[1.875vw] font-extrabold mb-6 flex justify-between">
                 <div>
-                    <span>{title}</span>&nbsp;Products
+                    <span
+                        className={`bg-[${
+                            title === 'Liked' ? '#6b66da' : '#2b966f'
+                        }]`}
+                    >
+                        {title}
+                    </span>
+                    &nbsp;Products
                 </div>
-                <Plus>
+                <div className="flex flex-col justify-center">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth={3}
                         stroke="currentColor"
+                        className="w-6 h-6 cursor-pointer"
                     >
                         <path
                             strokeLinecap="round"
@@ -71,10 +47,14 @@ export default function ProductList({ bgColor, title }: IProps) {
                             d="M12 4.5v15m7.5-7.5h-15"
                         />
                     </svg>
-                </Plus>
-            </Title>
+                </div>
+            </div>
 
-            <List spaceBetween={24} slidesPerView={3}>
+            <Swiper
+                spaceBetween={24}
+                slidesPerView={3}
+                className="w-full flex-1"
+            >
                 <SwiperSlide>
                     <CLargeCard />
                 </SwiperSlide>
@@ -93,7 +73,7 @@ export default function ProductList({ bgColor, title }: IProps) {
                 <SwiperSlide>
                     <CLargeCard />
                 </SwiperSlide>
-            </List>
-        </Wrap>
+            </Swiper>
+        </div>
     );
 }
