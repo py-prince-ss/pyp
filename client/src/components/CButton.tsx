@@ -1,5 +1,3 @@
-import styled from 'styled-components';
-
 interface ICButton {
     title: string;
     isFull?: boolean;
@@ -12,19 +10,6 @@ interface ICButton {
     ) => void;
 }
 
-const Btn = styled.button<{ isCancel?: boolean }>`
-    border-radius: 6px;
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    background: black;
-    color: white;
-    &:hover {
-        background: gray;
-    }
-`;
-
 export default function CButton({
     title,
     isFull,
@@ -32,5 +17,12 @@ export default function CButton({
     onClick,
     addClass,
 }: ICButton) {
-    return <Btn onClick={onClick}>{title}</Btn>;
+    return (
+        <button
+            className="rounded-md px-4 py-2 bg-black text-white hover:bg-gray"
+            onClick={onClick}
+        >
+            {title}
+        </button>
+    );
 }
