@@ -1,6 +1,6 @@
 'use client';
 
-import CLargeCard from '@/components/CLargeCard';
+import CLargeCard from '@/components/common/CLargeCard';
 import { bgState } from '@/state/bgState';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';

@@ -1,4 +1,4 @@
-import CButton from '@/components/CButton';
+import CButton from '@/components/common/CButton';
 import { useState } from 'react';
 
 const locVal = [
