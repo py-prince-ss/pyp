@@ -36,11 +36,11 @@ export default function Header() {
 
     return (
         <div
-            className={`w-full py-10 flex justify-center bg-[#e9e9f7] h-32 z-10 fixed transition-all duration-300 ${
+            className={`w-full py-10 flex px-20 justify-center bg-[#e9e9f7] h-32 z-10 fixed transition-all duration-300 ${
                 visible ? 'top-0' : '-top-32'
             } left-0`}
         >
-            <div className="w-full flex justify-between max-w-set px-20">
+            <div className="w-full flex justify-between max-w-set">
                 <div className="font-extrabold text-4xl">
                     <Link href="/">PYP</Link>
                 </div>
