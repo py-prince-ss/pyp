@@ -1,12 +1,15 @@
 'use client';
 
 import { bgState } from '@/state/bgState';
+import { bgFixed } from '@/utils/utils';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import CButton from './CButton';
+import LoginModal from './LoginModal';
+import CButton from './common/CButton';
 
 export default function Header() {
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [bgColor, setBgColor] = useRecoilState(bgState);
 
     const [position, setPosition] = useState(0);
@@ -32,7 +35,10 @@ export default function Header() {
         setPosition(moving);
     }, [position]);
 
-    const navigateToLogin = () => {};
+    const navigateToLogin = () => {
+        setModalOpen(true);
+        bgFixed();
+    };
 
     return (
         <div
@@ -55,6 +61,8 @@ export default function Header() {
                     <CButton title="Sign In" onClick={navigateToLogin} />
                 </div>
             </div>
+
+            {modalOpen ? <LoginModal setModalOpen={setModalOpen} /> : ''}
         </div>
     );
 }
