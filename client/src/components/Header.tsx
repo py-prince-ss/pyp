@@ -42,16 +42,16 @@ export default function Header() {
 
     return (
         <div
-            className={`w-full py-10 flex px-20 justify-center bg-[#e9e9f7] h-32 z-10 fixed transition-all duration-300 ${
-                visible ? 'top-0' : '-top-32'
+            className={`w-full py-10 flex px-20 justify-center bg-[#e9e9f7] h-24 z-10 fixed transition-all duration-300 ${
+                visible ? 'top-0' : '-top-24'
             } left-0`}
         >
-            <div className="w-full flex justify-between max-w-set">
-                <div className="font-extrabold text-4xl">
+            <div className="w-full flex justify-between max-w-set items-center">
+                <div className="font-extrabold text-4xl text-[#26253b]">
                     <Link href="/">PYP</Link>
                 </div>
 
-                <div className="flex gap-12 items-center">
+                <div className="flex gap-12 items-center text-[#72718a]">
                     <div className="bg-none border-none">
                         <Link href="/register/house">매물 등록</Link>
                     </div>
