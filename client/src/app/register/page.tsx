@@ -1,41 +1,185 @@
 'use client';
 
+import { signupApi } from '@/apis/userApi';
 import CButton from '@/components/common/CButton';
 import CInput from '@/components/common/CInput';
 import { useInput } from '@/hooks/useInput';
+import { IError } from '@/interface/commonIFC';
+import { signupIFC } from '@/interface/userIFC';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 export default function Register() {
+    const router = useRouter();
+
     const email = useInput('');
     const pw = useInput('');
     const pwCorrect = useInput('');
     const name = useInput('');
-    const phoneNumber = useInput('');
+    const phone = useInput('');
     const address = useInput('');
     const age = useInput('');
     const otp = useInput('');
 
     // 정규표현식 및 유효성 검사 후 true / false
-    const [isEmail, setIsEmail] = useState<boolean>(false);
-    const [isPw, setIsPw] = useState<boolean>(false);
-    const [isPwCorrect, setIsPwCorrect] = useState<boolean>(false);
-    const [isAdress, setIsAdress] = useState<boolean>(false);
-    const [isName, setIsName] = useState<boolean>(false);
-    const [isPhone, setIsPhone] = useState<boolean>(false);
-    const [isPhonePending, setIsPhonePending] = useState<boolean>(false);
-    const [isPhoneAuth, setIsPhoneAuth] = useState<boolean>(false);
-    const [isAge, setIsAge] = useState<boolean>(false);
+    const [isEmailErr, setIsEmailErr] = useState<boolean>(false);
+    const [isPwErr, setIsPwErr] = useState<boolean>(false);
+    const [isPwCorrectErr, setIsPwCorrectErr] = useState<boolean>(false);
+    const [isAdressErr, setIsAdressErr] = useState<boolean>(false);
+    const [isNameErr, setIsNameErr] = useState<boolean>(false);
+    const [isPhoneErr, setIsPhoneErr] = useState<boolean>(false);
+    const [isPhonePendingErr, setIsPhonePendingErr] = useState<boolean>(false);
+    const [isPhoneAuthErr, setIsPhoneAuthErr] = useState<boolean>(false);
+    const [isAgeErr, setIsAgeErr] = useState<boolean>(false);
 
-    const [nameMessage, setNameMessage] = useState<string>('');
-    const [pwMessage, setpwMessage] = useState<string>('');
-    const [pwConfirmMessage, setPwConfirmMessage] = useState<string>('');
-    const [emailMessage, setEmailMessage] = useState<string>('');
-    const [phoneMessage, setPhoneMessage] = useState<string>('');
-    const [addressMessage, setAddressMessage] = useState<string>('');
-    const [ageMessage, setAgeMessage] = useState<string>('');
+    const [nameErrMsg, setNameErrMsg] = useState<string>('');
+    const [pwErrMsg, setPwErrMsg] = useState<string>('');
+    const [pwConfirmErrMsg, setPwConfirmErrMsg] = useState<string>('');
+    const [emailErrMsg, setEmailErrMsg] = useState<string>('');
+    const [phoneErrMsg, setPhoneErrMsg] = useState<string>('');
+    const [addressErrMsg, setAddressErrMsg] = useState<string>('');
+    const [ageErrMsg, setAgeErrMsg] = useState<string>('');
 
-    const handleSubmit = useCallback(() => {}, []);
+    const signupMutation = useMutation({
+        mutationFn: signupApi,
+        onMutate: (variable) => {
+            console.log('onMutate', variable);
+        },
+        onError: (error: IError, variable, context) => {
+            console.error('signupErr:::', error);
 
+            if (error.response.data.msg === '이미 존재하는 이메일입니다.') {
+                setIsPwErr(false);
+                setIsEmailErr(true);
+                setEmailErrMsg('이미 존재하는 이메일입니다.');
+            }
+        },
+        onSuccess: (data, variables, context) => {
+            console.log('signupSuccess', data, variables, context);
+
+            if (data.success) {
+                localStorage.setItem('token', data.token);
+                router.push('/');
+            }
+        },
+        onSettled: () => {
+            console.log('signupEnd');
+        },
+    });
+
+    const handleSubmit = useCallback(
+        (
+            e:
+                | React.FormEvent<HTMLFormElement>
+                | React.MouseEvent<HTMLButtonElement>,
+        ) => {
+            e.preventDefault();
+
+            setIsEmailErr(false);
+            setIsPwErr(false);
+            setIsPwCorrectErr(false);
+            setIsAdressErr(false);
+            setIsNameErr(false);
+            setIsPhoneErr(false);
+            setIsPhonePendingErr(false);
+            setIsPhoneAuthErr(false);
+            setIsAgeErr(false);
+
+            let emailVal = email.value;
+            let pwVal = pw.value;
+            let pwCheckVal = pwCorrect.value;
+            let nameVal = name.value;
+            let phoneVal = phone.value;
+
+            let errFlag = false;
+
+            let emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+            let pwRegex =
+                /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,}$/;
+
+            if (emailVal === '') {
+                setIsEmailErr(true);
+                setEmailErrMsg('이메일을 입력해주세요.');
+                errFlag = true;
+            } else if (!emailRegex.test(emailVal)) {
+                setIsEmailErr(true);
+                setEmailErrMsg('이메일 형식을 확인해주세요.');
+                errFlag = true;
+            }
+            if (pwVal === '') {
+                setIsPwErr(true);
+                setPwErrMsg('비밀번호를 입력해주세요.');
+                errFlag = true;
+            } else if (!pwRegex.test(pwVal)) {
+                setIsPwErr(true);
+                setPwErrMsg(
+                    '비밀번호는 영문, 숫자, 특수문자 중 2가지 이상 조합하여 8자리 이상으로 입력해주세요.',
+                );
+                errFlag = true;
+            }
+            if (pwCheckVal === '') {
+                setIsPwCorrectErr(true);
+                setPwConfirmErrMsg('비밀번호 확인을 입력해주세요.');
+                errFlag = true;
+            } else if (pwCheckVal !== pwVal) {
+                setIsPwCorrectErr(true);
+                setPwConfirmErrMsg(
+                    '비밀번호와 비밀번호 확인은 동일해야합니다.',
+                );
+                errFlag = true;
+            }
+            if (nameVal === '') {
+                setIsNameErr(true);
+                setNameErrMsg('이름을 입력해주세요.');
+                errFlag = true;
+            }
+            if (phoneVal === '') {
+                setIsPhoneErr(true);
+                setPhoneErrMsg('휴대폰 번호를 입력해주세요.');
+                errFlag = true;
+            }
+            // if (authNum.value === '') {
+            //     setAuthErr(true);
+            //     setAuthErrMsg('인증번호를 입력해주세요.');
+            //     errFlag = true;
+            // } else if (authNum.value !== authNumResponse) {
+            //     setAuthErr(true);
+            //     setAuthErrMsg('인증번호를 확인해주세요.');
+            //     errFlag = true;
+            // }
+
+            if (errFlag) return;
+
+            // name: name.value,
+            // age: age.value,
+            // email: email.value,
+            // password: pw.value,
+            // phone: phoneNumber.value,
+            // address: address.value,
+
+            let payload: signupIFC = {
+                name: nameVal,
+                age: age.value,
+                email: emailVal,
+                password: pwVal,
+                phone: phoneVal,
+                address: address.value,
+            };
+
+            signupMutation.mutate(payload);
+        },
+        [
+            email,
+            pw,
+            name,
+            pwCorrect,
+            phone,
+            signupMutation,
+            // authNum,
+            // authNumResponse,
+        ],
+    );
     const handlePhoneAuthentication = () => {};
 
     const confirmPhoneAuthentication = () => {};
@@ -62,8 +206,8 @@ export default function Register() {
                                     type="email"
                                     placeholder="이메일을 입력해주세요."
                                     label="이메일"
-                                    isErr={isEmail}
-                                    errMsg={emailMessage}
+                                    isErr={isEmailErr}
+                                    errMsg={emailErrMsg}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -86,8 +230,8 @@ export default function Register() {
                                     type="password"
                                     placeholder="비밀번호를 입력해주세요."
                                     label="비밀번호"
-                                    isErr={isPw}
-                                    errMsg={pwMessage}
+                                    isErr={isPwErr}
+                                    errMsg={pwErrMsg}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -110,8 +254,8 @@ export default function Register() {
                                     type="password"
                                     placeholder="비밀번호 확인을 입력해주세요."
                                     label="비밀번호 확인"
-                                    isErr={isPwCorrect}
-                                    errMsg={pwConfirmMessage}
+                                    isErr={isPwCorrectErr}
+                                    errMsg={pwConfirmErrMsg}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -134,8 +278,8 @@ export default function Register() {
                                     type="text"
                                     placeholder="이름을 입력해주세요."
                                     label="이름"
-                                    isErr={isName}
-                                    errMsg={nameMessage}
+                                    isErr={isNameErr}
+                                    errMsg={nameErrMsg}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +304,7 @@ export default function Register() {
                                     <div className="w-full flex gap-4">
                                         <div className="flex-1">
                                             <CInput
-                                                {...phoneNumber}
+                                                {...phone}
                                                 type="text"
                                                 placeholder="핸드폰 번호를 입력해주세요."
                                             >
@@ -186,14 +330,14 @@ export default function Register() {
                                             onClick={handlePhoneAuthentication}
                                         />
                                     </div>
-                                    {isPhone && (
+                                    {/* {isPhone && (
                                         <div className="text-[#ea002c] text-xs mt-1 pl-4">
-                                            {phoneMessage}
+                                            {phoneErrMsg}
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
 
-                                {isPhonePending && (
+                                {/* {isPhonePending && (
                                     <div>
                                         <div className="mb-2 font-medium text-sm">
                                             인증 번호
@@ -232,19 +376,19 @@ export default function Register() {
 
                                         {isPhone && (
                                             <div className="text-[#ea002c] text-xs mt-1 pl-4">
-                                                {phoneMessage}
+                                                {phoneErrMsg}
                                             </div>
                                         )}
                                     </div>
-                                )}
+                                )} */}
 
                                 <CInput
                                     {...age}
                                     type="text"
                                     placeholder="나이를 입력해주세요."
                                     label="나이"
-                                    isErr={isAge}
-                                    errMsg={ageMessage}
+                                    isErr={isAgeErr}
+                                    errMsg={ageErrMsg}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -267,8 +411,8 @@ export default function Register() {
                                     type="text"
                                     placeholder="주소를 입력해주세요."
                                     label="주소"
-                                    isErr={isAdress}
-                                    errMsg={addressMessage}
+                                    isErr={isAdressErr}
+                                    errMsg={addressErrMsg}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
