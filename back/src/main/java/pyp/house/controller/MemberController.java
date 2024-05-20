@@ -12,12 +12,12 @@ public class MemberController {
     //생성자 주입
     private final MemberService memberService;
 
-    @PostMapping("/member/sign")
+    @PostMapping("/signup")
     public String save(@RequestBody MemberDTO memberDTO){
         return memberService.save(memberDTO);
     }
 
-    @PostMapping("/member/login")
+    @PostMapping("/login")
     public String login(@RequestBody MemberDTO memberDto){
         JSONObject loginInfo =  memberService.login(memberDto);
         return loginInfo.toString();
