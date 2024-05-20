@@ -186,7 +186,7 @@ export default function Register() {
 
     return (
         <div className="w-full">
-            <div className="w-full py-44 px-20 flex justify-center">
+            <div className="w-full py-20 px-20 flex justify-center">
                 <div className="w-full max-w-set">
                     <div className="w-full h-fit rounded-[44px] grid grid-cols-2 bg-white shadow-hotplace border-2 border-[rgba(182,182,209,0.15)]">
                         <div className="w-full h-full bg-yellow-200 rounded-[44px] text-center flex justify-center flex-col">
