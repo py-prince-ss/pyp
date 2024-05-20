@@ -3,6 +3,7 @@
 import { bgState } from '@/state/bgState';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import Footer from '../Footer';
 import Header from '../Header';
 
 export default function LayoutWrapper({
@@ -22,6 +23,7 @@ export default function LayoutWrapper({
             <div className="w-full">
                 <Header />
                 <div className="pt-40">{children}</div>
+                <Footer />
             </div>
         </div>
     );

@@ -45,7 +45,9 @@ export default function Home() {
             </div>
 
             <div className="w-full flex flex-col gap-6 px-20 relative">
-                <div
+                <ProductList title="Liked" />
+                <ProductList title="Recommended" />
+                {/* <div
                     id="liked-list"
                     className={`${
                         isFixed
@@ -58,7 +60,7 @@ export default function Home() {
 
                 <div className="z-1 absolute top-[100vh] left-1/2 -translate-x-[50%]">
                     <ProductList title="Recommended" />
-                </div>
+                </div> */}
             </div>
         </div>
     );
