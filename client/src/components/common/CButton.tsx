@@ -19,7 +19,9 @@ export default function CButton({
 }: ICButton) {
     return (
         <button
-            className="rounded-md px-4 py-2 bg-[#6B66DA] text-white hover:bg-gray"
+            className={`rounded-md px-4 py-2 bg-[#6B66DA] text-white hover:bg-[#4E4ABB] ${
+                isFull && 'w-full'
+            } transition-all`}
             onClick={onClick}
         >
             {title}

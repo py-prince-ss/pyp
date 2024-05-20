@@ -13,7 +13,6 @@ export default function Header() {
     const [bgColor, setBgColor] = useRecoilState(bgState);
 
     const [position, setPosition] = useState(0);
-    const [visible, setVisible] = useState(true);
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
@@ -25,13 +24,9 @@ export default function Header() {
     const handleScroll = useCallback(() => {
         const moving = window.pageYOffset;
 
-        if (moving > window.innerHeight / 2) {
-            setBgColor('#fff');
-        } else {
-            setBgColor('#f3f2fb');
-        }
+        let bg = moving > window.innerHeight / 2 ? '#fff' : '#f3f2fb';
+        setBgColor(bg);
 
-        setVisible(position > moving);
         setPosition(moving);
     }, [position]);
 
@@ -41,17 +36,13 @@ export default function Header() {
     };
 
     return (
-        <div
-            className={`w-full py-10 flex px-20 justify-center bg-[#e9e9f7] h-24 z-10 fixed transition-all duration-300 ${
-                visible ? 'top-0' : '-top-24'
-            } left-0`}
-        >
+        <div className="w-full py-12 flex px-20 justify-center bg-[#f3f2fb] h-24">
             <div className="w-full flex justify-between max-w-set items-center">
                 <div className="font-extrabold text-4xl text-[#26253b]">
                     <Link href="/">PYP</Link>
                 </div>
 
-                <div className="flex gap-12 items-center text-[#72718a]">
+                <div className="flex gap-12 items-center">
                     <div className="bg-none border-none">
                         <Link href="/register/house">매물 등록</Link>
                     </div>
