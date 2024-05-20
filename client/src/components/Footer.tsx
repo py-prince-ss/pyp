@@ -53,7 +53,7 @@ export default function Footer() {
         >
             <div
                 className={`w-full h-fit min-h-screen py-52 bg-[#171620] ${
-                    isLarge ? 'rounded-none' : 'rounded-[10vw]'
+                    isLarge ? 'rounded-none' : 'rounded-t-[10vw]'
                 } duration-500 flex justify-center items-center`}
             >
                 <div
