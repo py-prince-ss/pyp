@@ -26,7 +26,8 @@ public class MemberService {
         // 4. 가입한적 있으면 가입 안됨
         // 5. 가입한 적 없으면 저장하고, JSon객체 리턴
         JSONObject signupJson = new JSONObject();
-        if (!memberRepository.existsByMemberEmail(memberDTO.getEmail())){
+        if (memberRepository.existsByMemberEmail(memberDTO.getEmail())){
+            System.out.println(memberDTO);
             signupJson.put("success", false);
             signupJson.put("msg", "이미 가입한 이메일입니다.");
             return signupJson.toString();
