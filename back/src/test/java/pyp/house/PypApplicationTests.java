@@ -1,10 +1,10 @@
-package pyphouse;
+package pyp.house;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApplicationTests {
+class PypApplicationTests {
 
 	@Test
 	void contextLoads() {
