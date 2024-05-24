@@ -3,14 +3,19 @@
 import { signupApi } from '@/apis/userApi';
 import CButton from '@/components/common/CButton';
 import CInput from '@/components/common/CInput';
+import CSpinner from '@/components/common/CSpinner';
 import { useInput } from '@/hooks/useInput';
 import { IError } from '@/interface/commonIFC';
 import { signupIFC } from '@/interface/userIFC';
+import { tokenState } from '@/state/userState';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 export default function Register() {
+    const [token, setToken] = useRecoilState(tokenState);
+
     const router = useRouter();
 
     const email = useInput('');
@@ -26,7 +31,7 @@ export default function Register() {
     const [isEmailErr, setIsEmailErr] = useState<boolean>(false);
     const [isPwErr, setIsPwErr] = useState<boolean>(false);
     const [isPwCorrectErr, setIsPwCorrectErr] = useState<boolean>(false);
-    const [isAdressErr, setIsAdressErr] = useState<boolean>(false);
+    const [isAddressErr, setIsAddressErr] = useState<boolean>(false);
     const [isNameErr, setIsNameErr] = useState<boolean>(false);
     const [isPhoneErr, setIsPhoneErr] = useState<boolean>(false);
     const [isPhonePendingErr, setIsPhonePendingErr] = useState<boolean>(false);
@@ -60,7 +65,13 @@ export default function Register() {
 
             if (data.success) {
                 localStorage.setItem('token', data.token);
+                setToken(data.token);
                 router.push('/');
+            } else {
+                if (data.msg === '이미 가입한 이메일입니다.') {
+                    setIsEmailErr(true);
+                    setEmailErrMsg('이미 존재하는 이메일입니다.');
+                }
             }
         },
         onSettled: () => {
@@ -79,7 +90,7 @@ export default function Register() {
             setIsEmailErr(false);
             setIsPwErr(false);
             setIsPwCorrectErr(false);
-            setIsAdressErr(false);
+            setIsAddressErr(false);
             setIsNameErr(false);
             setIsPhoneErr(false);
             setIsPhonePendingErr(false);
@@ -91,6 +102,8 @@ export default function Register() {
             let pwCheckVal = pwCorrect.value;
             let nameVal = name.value;
             let phoneVal = phone.value;
+            let ageVal = age.value;
+            let addressVal = address.value;
 
             let errFlag = false;
 
@@ -139,6 +152,16 @@ export default function Register() {
                 setPhoneErrMsg('휴대폰 번호를 입력해주세요.');
                 errFlag = true;
             }
+            if (ageVal === '') {
+                setIsAgeErr(true);
+                setAgeErrMsg('나이를 입력해주세요.');
+                errFlag = true;
+            }
+            if (addressVal === '') {
+                setIsAddressErr(true);
+                setAddressErrMsg('주소를 입력해주세요.');
+                errFlag = true;
+            }
             // if (authNum.value === '') {
             //     setAuthErr(true);
             //     setAuthErrMsg('인증번호를 입력해주세요.');
@@ -150,13 +173,6 @@ export default function Register() {
             // }
 
             if (errFlag) return;
-
-            // name: name.value,
-            // age: age.value,
-            // email: email.value,
-            // password: pw.value,
-            // phone: phoneNumber.value,
-            // address: address.value,
 
             let payload: signupIFC = {
                 name: nameVal,
@@ -189,7 +205,9 @@ export default function Register() {
     };
 
     return (
-        <div className="w-screen h-screen bg-[#E7E6F0] p-2 overflow-hidden">
+        <div className="w-screen h-fit bg-[#E7E6F0] p-2 overflow-x-hidden">
+            {signupMutation.isPending && <CSpinner />}
+
             <div className="w-full h-full bg-[#FAFAFC] rounded-lg flex flex-col">
                 <div className="w-full flex justify-end p-6">
                     <div
@@ -330,6 +348,8 @@ export default function Register() {
                                                     {...phone}
                                                     type="text"
                                                     placeholder="핸드폰 번호를 입력해주세요."
+                                                    isErr={isPhoneErr}
+                                                    errMsg={phoneErrMsg}
                                                 >
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
@@ -386,7 +406,7 @@ export default function Register() {
                                         type="text"
                                         placeholder="주소를 입력해주세요."
                                         label="주소"
-                                        isErr={isAdressErr}
+                                        isErr={isAddressErr}
                                         errMsg={addressErrMsg}
                                     >
                                         <svg

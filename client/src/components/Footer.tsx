@@ -42,10 +42,6 @@ export default function Footer() {
         setCurrentColor(currentColor === 3 ? 0 : currentColor + 1);
     };
 
-    useEffect(() => {
-        console.log('colors:::', colors[currentColor]);
-    }, [currentColor]);
-
     return (
         <div
             className={`w-full ${isLarge ? '' : 'px-20'} transition-all mt-96`}
