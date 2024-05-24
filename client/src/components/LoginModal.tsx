@@ -3,19 +3,24 @@
 import { signinApi } from '@/apis/userApi';
 import { useInput } from '@/hooks/useInput';
 import { IError } from '@/interface/commonIFC';
+import { tokenState } from '@/state/userState';
 import { cancelBgFixed } from '@/utils/utils';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import CButton from './common/CButton';
 import CInput from './common/CInput';
+import CSpinner from './common/CSpinner';
 
 interface ILoginModal {
     setModalOpen: (flag: boolean) => void;
 }
 
 export default function LoginModal({ setModalOpen }: ILoginModal) {
+    const [token, setToken] = useRecoilState(tokenState);
+
     const router = useRouter();
 
     const [emailErr, setEmailErr] = useState(false);
@@ -23,39 +28,30 @@ export default function LoginModal({ setModalOpen }: ILoginModal) {
     const [emailErrMsg, setEmailErrMsg] = useState('이메일을 입력해주세요.');
     const [pwErrMsg, setPwErrMsg] = useState('비밀번호를 입력해주세요.');
 
-    // const router = useRouter();
+    const [fetchErr, setFetchErr] = useState(false);
 
     const email = useInput('');
     const password = useInput('');
-
-    // const [user, setUser] = useRecoilState(userState);
 
     const signInMutation = useMutation({
         mutationFn: signinApi,
         onMutate: (variable) => {
             console.log('onMutate', variable);
+            setFetchErr(false);
         },
         onError: (error: IError, variable, context) => {
             console.error('signinErr:::', error);
-            if (error.response.data.msg === '이메일을 확인해주세요.') {
-                setPwErr(false);
-                setEmailErr(true);
-                setEmailErrMsg('이메일을 확인해주세요.');
-            } else {
-                setEmailErr(false);
-                setPwErr(true);
-                setPwErrMsg('비밀번호를 확인해주세요.');
-            }
+            setFetchErr(true);
         },
         onSuccess: (data, variables, context) => {
             console.log('signinSuccess', data, variables, context);
             if (data.success) {
                 setModalOpen(false);
-                // setUser({ ...data.user, token: data.token });
                 localStorage.setItem('token', data.token);
+                setToken(data.token);
 
                 router.push('/');
-            }
+            } else setFetchErr(true);
         },
         onSettled: () => {
             cancelBgFixed();
@@ -105,19 +101,19 @@ export default function LoginModal({ setModalOpen }: ILoginModal) {
 
             signInMutation.mutate(payload);
         },
-        [],
+        [email, password, signInMutation],
     );
 
     return (
         <div className="w-screen h-screen fixed top-0 left-0 bg-gray-500 flex flex-col justify-center bg-opacity-40 overflow-hidden z-50">
-            {/* {signInMutation.isPending && <CSpinner />} */}
+            {signInMutation.isPending && <CSpinner />}
 
             <div className="relative w-[480px] h-fit py-12 bg-white shadow-xl items-center mx-auto my-0 rounded-xl flex">
                 <div className="w-full h-full px-12 flex justify-center flex-col">
                     <div className="mb-8 text-3xl font-bold">Log In</div>
 
                     <form
-                        // onSubmit={handleSubmit}
+                        onSubmit={handleSubmit}
                         className="flex flex-col gap-4"
                     >
                         <div>
@@ -176,11 +172,16 @@ export default function LoginModal({ setModalOpen }: ILoginModal) {
                             </CInput>
                         </div>
 
+                        {fetchErr && (
+                            <div className="text-[#ea002c] text-xs pl-2 -mt-2">
+                                이메일 혹은 비밀번호를 확인해주세요.
+                            </div>
+                        )}
                         <CButton title="SIGN IN" onClick={handleSubmit} />
                     </form>
 
                     <div className="text-center mt-8 text-sm text-gray-400">
-                        Not a Member?{' '}
+                        Not a Member?&nbsp;
                         <Link
                             href="/register"
                             onClick={() => {
