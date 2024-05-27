@@ -49,12 +49,12 @@ public class BuildingService {
         return buildingJson.toString();
     }
 
-    public String update(String id, BuildingDTO buildingDTO, String userId) {
+    public String update(String id, BuildingDTO buildingDTO) {
         JSONObject buildingJson = new JSONObject();
         Optional<BuildingEntity> byBuildingID = buildingRepository.findById(Long.valueOf(id));
         if (byBuildingID.isPresent()){
             BuildingEntity savedBuildingEntity = byBuildingID.get();
-            if (savedBuildingEntity.getUserId().equals(Long.valueOf(userId))) {
+            if (savedBuildingEntity.getUserId().equals(buildingDTO.getUserId())) {
                 BuildingEntity buildingEntity = BuildingEntity.toBuildingEntity(buildingDTO);
                 BuildingEntity updatedBuildingEntity = buildingRepository.save(buildingEntity);
                 buildingJson.put("success", true);

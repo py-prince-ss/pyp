@@ -22,8 +22,8 @@ public class BuildingController {
     }
 
     @PutMapping("/{id}")
-    public final String BuildingEdit(@PathVariable String id, @RequestBody BuildingDTO buildingDTO, String userId){
-        return buildingService.update(id, buildingDTO, userId);
+    public final String BuildingEdit(@PathVariable String id, @RequestBody BuildingDTO buildingDTO){
+        return buildingService.update(id, buildingDTO);
     }
 
     @DeleteMapping("/{id}")
