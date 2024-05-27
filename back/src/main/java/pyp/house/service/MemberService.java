@@ -16,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final SecurityConfig securityConfig;
 
     public String save(MemberDTO memberDTO) {
         //repository의 save 메서드 호출 (조건, 당연히 Entity 객체로 넘겨주어야 한다.)
@@ -27,7 +26,6 @@ public class MemberService {
         // 5. 가입한 적 없으면 저장하고, JSon객체 리턴
         JSONObject signupJson = new JSONObject();
         if (memberRepository.existsByMemberEmail(memberDTO.getEmail())){
-            System.out.println(memberDTO);
             signupJson.put("success", false);
             signupJson.put("msg", "이미 가입한 이메일입니다.");
             return signupJson.toString();
