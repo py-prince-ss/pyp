@@ -23,4 +23,9 @@ public class MemberController {
         return loginInfo.toString();
     }
 
+    @PostMapping("/auth")
+    public String auth(@RequestBody String token){
+        return memberService.auth(token);
+    }
+
 }
