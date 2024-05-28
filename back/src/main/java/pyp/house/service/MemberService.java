@@ -55,7 +55,7 @@ public class MemberService {
                 그리고 string 비교 말고, Encoder의 matches()메소드를 활용하면 raw한 비번과
                 encrypt 된 비밀번호를 직접 비교 가능 */
                 JSONObject user = MemberEntity.toJSONOBJECT(memberEntity);
-                String token = JwtService.JwtGenerate(memberEntity.getMemberName());
+                String token = JwtService.JwtGenerate(memberEntity.getMemberEmail());
 
                 loginJson.put("success", true);
                 loginJson.put("user", user);
@@ -73,6 +73,11 @@ public class MemberService {
             loginJson.put("msg", "일치하는 이메일이 없습니다. 회원가입을 진행해주세요.");
             return loginJson;
         }
+    }
+
+    public String auth(String token){
+        //Jwt토큰 받아서 jwt 서비스로 토스.
+        return JwtService.ExtractJwtToken(token);
     }
 }
 
