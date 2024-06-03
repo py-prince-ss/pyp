@@ -2,6 +2,8 @@ package pyp.house.service;
 
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pyp.house.dto.BuildingDTO;
 import pyp.house.entity.BuildingEntity;
@@ -82,5 +84,31 @@ public class BuildingService {
             buildingJson.put("msg", "매물이 존재하지 않습니다.");
         }
         return buildingJson.toString();
+    }
+
+    public String search(String location,
+                         String type,
+                         Integer price1,
+                         Integer price2,
+                         Integer size1,
+                         Integer size2,
+                         Pageable pageable){
+        JSONObject buildingJson = new JSONObject();
+        Page<BuildingEntity> buildingsPage = buildingRepository.findByCriteria(location,
+                type,
+                price1,
+                price2,
+                size1,
+                size2,
+                pageable);
+        if (buildingsPage.isEmpty()){
+            buildingJson.put("success", false);
+            buildingJson.put("msg", "조건에 일치하는 매물이 없습니다.");
+            return buildingJson.toString();
+        } else {
+            buildingJson.put("success", true);
+            buildingJson.put("Array", buildingsPage.map(BuildingDTO::toBuildingDTO));
+            return buildingJson.toString();
+        }
     }
 }
