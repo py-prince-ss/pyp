@@ -74,8 +74,16 @@ public class BuildingEntity {
     @Column(length = 100)
     private String bldgNm;
 
-//    @Column(length = 500)
-//    private String img;
+    //가격 쿼리를 위한 임시 가격 생성, 어떻게 할지 논의 필요
+    @Column
+    private Integer price;
+
+    /*
+    //나중에 이미지 src 저장하는 녀석 추가해서 이미지 소스 주소 저장하기 위한 필드
+    @Column(length = 500)
+    private String img;
+
+     */
 
 
     // DTO to Entity

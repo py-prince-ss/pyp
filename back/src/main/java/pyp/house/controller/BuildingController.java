@@ -17,7 +17,7 @@ public class BuildingController {
     };
 
     @GetMapping("/{id}")
-    public final String BuildingFind(@PathVariable String id){
+    public final String BuildingDetail(@PathVariable String id){
         return  buildingService.find(id);
     }
 
