@@ -48,6 +48,7 @@ public class MemberEntity {
         userJson.put("email", memberEntity.getMemberEmail());
         userJson.put("phone", memberEntity.getMemberPhone());
         userJson.put("age", memberEntity.getMemberAge());
+        userJson.put("id", memberEntity.getId());
         return userJson;
     }
 }
