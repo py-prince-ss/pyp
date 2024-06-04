@@ -28,7 +28,7 @@ export default function LayoutWrapper({
                 <div className="w-full">
                     <Header />
                     <div>{children}</div>
-                    <Footer />
+                    {router !== 'search' && <Footer />}
                 </div>
             )}
         </div>
