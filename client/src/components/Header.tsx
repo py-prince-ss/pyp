@@ -73,17 +73,45 @@ export default function Header() {
     };
 
     return (
-        <div className="w-full py-12 flex px-20 justify-center bg-[#f3f2fb] h-24">
-            <div className="w-full flex justify-between max-w-set items-center">
-                <div className="font-extrabold text-4xl text-[#26253b]">
+        <div
+            className={`w-full flex justify-center ${
+                router === 'search'
+                    ? 'py-2 px-8 bg-[#2B2F40] border-b border-b-[#39394a]'
+                    : 'py-12 px-20 h-24 bg-[#f3f2fb]'
+            }`}
+        >
+            <div
+                className={`w-full flex justify-between ${
+                    router !== 'search' && 'max-w-set'
+                } items-center`}
+            >
+                <div
+                    className={`${
+                        router === 'search'
+                            ? 'font-medium text-xl text-white'
+                            : 'font-extrabold text-4xl text-[#26253b]'
+                    }`}
+                >
                     <Link href="/">PYP</Link>
                 </div>
 
-                <div className="flex gap-12 items-center">
-                    <div className="bg-none border-none">
+                <div
+                    className={`flex ${
+                        router === 'search' ? 'gap-8' : 'gap-12'
+                    } items-center`}
+                >
+                    <div
+                        className={`bg-none border-none ${
+                            router === 'search' && 'text-white text-sm'
+                        }`}
+                    >
                         <Link href="/house/register">매물 등록</Link>
                     </div>
-                    <div className="bg-none border-none">
+                    <div
+                        className={`bg-none border-none ${
+                            router === 'search' && 'text-white text-sm'
+                        }`}
+                    >
                         <Link href="/search">통합검색</Link>
                     </div>
                     {isAuth ? (
