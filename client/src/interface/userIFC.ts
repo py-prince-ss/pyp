@@ -1,3 +1,11 @@
+export interface userIFC {
+    age: number;
+    email: string;
+    id: number;
+    name: string;
+    phone: string;
+}
+
 export interface signinIFC {
     email: string;
     password: string;

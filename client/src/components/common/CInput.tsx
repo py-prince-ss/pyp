@@ -11,6 +11,7 @@ interface ICInput {
     isErr?: boolean;
     errMsg?: string;
     children?: React.ReactNode;
+    required?: boolean;
 }
 
 export default function CInput({
@@ -22,11 +23,17 @@ export default function CInput({
     isErr = false,
     errMsg,
     children,
+    required = false,
 }: ICInput) {
     return (
         <div className="w-full">
             {label !== '' && (
-                <div className="mb-2 font-medium text-sm">{label}</div>
+                <div className="mb-2 font-medium text-sm">
+                    {label}
+                    {required && (
+                        <span className="text-[#ea002c]">&nbsp;*</span>
+                    )}
+                </div>
             )}
             <div
                 className={`w-full h-10 flex gap-2 rounded-md border ${
