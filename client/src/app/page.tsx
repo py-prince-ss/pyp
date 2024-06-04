@@ -30,7 +30,7 @@ export default function Home() {
     }, []);
 
     return (
-        <div>
+        <div className="pt-40">
             <div className="px-20 h-[calc(100vh-320px)] flex flex-col gap-12 mb-40">
                 <div className="text-center">
                     <div className="text-7xl font-bold mb-16 mt-12">

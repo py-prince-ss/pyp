@@ -7,14 +7,14 @@ import CSpinner from '@/components/common/CSpinner';
 import { useInput } from '@/hooks/useInput';
 import { IError } from '@/interface/commonIFC';
 import { signupIFC } from '@/interface/userIFC';
-import { tokenState } from '@/state/userState';
+import { userState } from '@/state/userState';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 export default function Register() {
-    const [token, setToken] = useRecoilState(tokenState);
+    const [user, setUser] = useRecoilState(userState);
 
     const router = useRouter();
 
@@ -65,7 +65,10 @@ export default function Register() {
 
             if (data.success) {
                 localStorage.setItem('token', data.token);
-                setToken(data.token);
+                setUser({
+                    token: data.token,
+                    user: data.user,
+                });
                 router.push('/');
             } else {
                 if (data.msg === '이미 가입한 이메일입니다.') {

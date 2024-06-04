@@ -3,7 +3,7 @@
 import { signinApi } from '@/apis/userApi';
 import { useInput } from '@/hooks/useInput';
 import { IError } from '@/interface/commonIFC';
-import { tokenState } from '@/state/userState';
+import { userState } from '@/state/userState';
 import { cancelBgFixed } from '@/utils/utils';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
@@ -19,7 +19,7 @@ interface ILoginModal {
 }
 
 export default function LoginModal({ setModalOpen }: ILoginModal) {
-    const [token, setToken] = useRecoilState(tokenState);
+    const [user, setUser] = useRecoilState(userState);
 
     const router = useRouter();
 
@@ -48,7 +48,10 @@ export default function LoginModal({ setModalOpen }: ILoginModal) {
             if (data.success) {
                 setModalOpen(false);
                 localStorage.setItem('token', data.token);
-                setToken(data.token);
+                setUser({
+                    token: data.token,
+                    user: data.user,
+                });
 
                 router.push('/');
             } else setFetchErr(true);

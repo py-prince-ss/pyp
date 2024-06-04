@@ -27,7 +27,7 @@ export default function LayoutWrapper({
             ) : (
                 <div className="w-full">
                     <Header />
-                    <div className="pt-40">{children}</div>
+                    <div>{children}</div>
                     <Footer />
                 </div>
             )}
